@@ -18,6 +18,7 @@
     </content>
     <orderEntry type="jdk" jdkName="Python 3.11 (dj-admin)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="@popperjs" level="application" />
   </component>
   <component name="PyDocumentationSettings">
     <option name="format" value="PLAIN" />
