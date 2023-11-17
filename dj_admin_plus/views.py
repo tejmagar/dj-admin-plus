@@ -8,6 +8,7 @@ from django.contrib.auth import get_user_model, authenticate, login, logout
 from django.contrib.auth.forms import SetPasswordForm
 from django.core.paginator import Paginator
 from django.db.models import Model
+from django.db.models.query_utils import DeferredAttribute
 from django.http import Http404, HttpResponseForbidden, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template.defaultfilters import safe
@@ -230,15 +231,23 @@ class ModelView(BaseModelView):
 
         return display_objects
 
+    # noinspection PyProtectedMember
     def verbose_list_display(self, list_display, model_class):
         verbose_label_list = []
 
         for list_label in list_display:
-            if hasattr(model_class, list_label):
-                deferred_field = getattr(model_class, list_label)
-                verbose_label_list.append(deferred_field.field.verbose_name.upper())
+            if list_label == '__str__':
+                verbose_label_list.append(model_class._meta.verbose_name.upper())
+
             else:
-                verbose_label_list.append(list_label.upper())
+                if hasattr(model_class, list_label):
+                    deferred_field = getattr(model_class, list_label)
+
+                    if isinstance(deferred_field, DeferredAttribute):
+                        verbose_label_list.append(deferred_field.field.verbose_name.upper())
+
+                    else:
+                        verbose_label_list.append(list_label.upper())
 
         return verbose_label_list
 
