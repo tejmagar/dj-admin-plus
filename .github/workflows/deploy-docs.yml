@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'docs/**'
 
 
 permissions:
@@ -24,6 +26,6 @@ jobs:
           key: ${{github.ref}}
           path: cache
       - run: pip install mkdocs
-      - run: mkdocs gh-deploy -f
+      - run: mkdocs gh-deploy --force
 
 
