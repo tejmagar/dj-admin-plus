@@ -43,7 +43,7 @@ class AdminLoginView(View):
                 'username': form.cleaned_data['login'],
                 'password': form.cleaned_data['password']
             }
-            print(credentials)
+
             user = authenticate(request, **credentials)
             if user:
                 login(request, user)
