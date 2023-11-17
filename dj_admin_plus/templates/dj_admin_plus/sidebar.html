@@ -1,0 +1,32 @@
+<ul class="min-w-[230px] text-neutral-200 text-sm">
+
+    {% for menu in navigations %}
+        {% if menu.show %}
+            <li>
+                <a href="{{ menu.url }}"
+                   class="{% if menu.selected %}bg-[#2270B0] text-white{% endif %} border-l-4 border-transparent hover:border-white block px-1 md:px-4 py-2">
+                    <i class="fas {{ menu.icon_class }} w-[28px] fa-lg text-white"></i>
+                    {{ menu.title }}
+                </a>
+
+                {% if menu.children %}
+                    <div class="text-sm bg-[#2C3338] py-1 {% if not menu.selected %}hidden{% endif %}">
+                        <ul>
+                            {% for child in menu.children %}
+                                {% if child.show %}
+                                    <li class="my">
+                                        <a href="{{ child.url }}"
+                                           class="block {% if child.selected %}text-white{% endif %} my-1 border-l-4 border-transparent hover:border-white px-4 py-1">
+                                            {{ child.title }}
+                                        </a>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+
+            </li>
+        {% endif %}
+    {% endfor %}
+</ul>

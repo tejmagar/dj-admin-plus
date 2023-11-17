@@ -1,0 +1,8 @@
+{% if widget.image_preview and widget.value %}
+    <div class="flex items-center gap-x-2">
+        <img class="rounded-lg" src="{{ widget.preview_url }}" width="60" height="60">
+        <a class="mb-4" href="{{ widget.preview_url }}" target="_blank">{{ widget.value }}</a>
+    </div>
+{% endif %}
+
+<input class="inline-block" type="file" name="{{ widget.name }}" {% include "django/forms/widgets/attrs.html" %} >

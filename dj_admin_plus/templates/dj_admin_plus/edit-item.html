@@ -1,0 +1,109 @@
+{% extends "dj_admin_plus/base.html" %}
+{% load dj_admin_plus %}
+
+{% block content %}
+    <style>
+        /**
+         * This contains hard coded css for django form.
+         */
+
+
+        .form-group .field > input, textarea {
+            width: 100%;
+            padding: 8px 12px;
+            border-radius: 8px;
+        }
+
+        .form-group a {
+            color: blue;
+        }
+
+        input[type='file'], input[type='color'], input[type='checkbox'], input[type='radio'] {
+            width: max-content !important;
+        }
+
+        input[type='file'], input[type='select'] {
+            padding: 2px !important;
+        }
+
+        select {
+            width: 98%;
+            max-width: 800px;
+            border-radius: 8px;
+            padding: 2px 8px;
+            border: 1px solid black;
+        }
+
+        /*
+         * Select and style inner field tags
+         */
+        .form-group .field * > * {
+            margin-bottom: 12px;
+            padding: 2px 8px;
+            border-radius: 8px;
+        }
+
+    </style>
+
+    {% include 'dj_admin_plus/title.html' with title=title %}
+
+    <form class="{% if not fieldsets %} w-[800px] {% endif %} text-neutral-700 text-sm max-w-full overflow-x-auto"
+          method="POST"
+          enctype="multipart/form-data">
+        {% csrf_token %}
+
+        {{ form.media }}
+
+        <div class="form-group text-gray-600">
+            {% if form.non_field_errors %}
+                <ul class="mb-8">
+                    {% for error in form.non_field_errors %}
+                        <li class="bg-red-500 text-white px-4 py-2 font-medium rounded-lg">
+                            <i class="fas fa-circle-exclamation mr-2 fa-lg"></i>{{ error }}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+
+            {% if fieldsets %}
+                {% for group_name, group in fieldsets %}
+                    <div class="mb-16">
+                        {% if group_name %}
+                            <div class="px-4 py-2 mb-2 bg-blue-500 text-neutral-100 font-medium">
+                                <button type="button">
+                                    <i class="fas fa-angle-down"></i>
+                                </button>
+
+                                <label class="font-medium ml-2">{{ group_name|safe }}</label>
+                            </div>
+                        {% endif %}
+
+                        {% for field_name in group.fields %}
+                            {% get_form_field_from_name form field_name as field %}
+                            {% include "dj_admin_plus/form-block.html" with field=field %}
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+
+            {% else %}
+                {% for field_name in form.fields %}
+                    {% get_form_field_from_name form field_name as field %}
+                    {% include "dj_admin_plus/form-block.html" with field=field %}
+                {% endfor %}
+            {% endif %}
+        </div>
+
+        <div class="flex gap-x-4 mt-8 justify-end items-center">
+            {% if not add_mode %}
+                <button type="submit" name="delete" value="Delete"
+                        class="text-red-600 px-4 py-2"
+                        onclick="return confirm('Do you want to delete?\nThis action cannot be reversed.')">
+                    Delete
+                </button>
+            {% endif %}
+
+            <input type="submit" name="save" value="Save"
+                   class="bg-[#2371B0] hover:bg-blue-500 text-white px-6 py-2  rounded-full">
+        </div>
+    </form>
+{% endblock %}

@@ -1,0 +1,17 @@
+<label class="mt-4 block font-medium text-base text-gray-800 {% if forloop.counter0 != 0 %} mt-8 {% endif %}">{{ field.label }}</label>
+
+<div class="mt-4">
+    {{ field.help_text|safe }}
+</div>
+
+<div class="mt-4 field">
+    {{ field }}
+</div>
+
+{% if field.errors %}
+    <ul class="mt-4">
+        {% for error in field.errors %}
+            <li class="text-red-500">{{ error }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+{% load dj_admin_plus %}
+<html lang="en">
+<head>
+    <title>DJ Admin Plus</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+          integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+          rel="stylesheet">
+
+    <style>
+        * {
+            font-family: 'Poppins', sans-serif;
+        }
+    </style>
+</head>
+<body>
+<div class="h-screen md:grid md:grid-rows-[50px_calc(100vh-50px)]">
+    <header class="bg-[#1D2327] p-2 flex justify-between items-center text-white text-sm">
+        <div class="text-neutral-200">
+            <button class="inline-block md:hidden" id="toggle">
+                <i class="fas fa-bars fa-lg"></i>
+            </button>
+
+            <a href="https://github.com" class="px-2 hidden md:inline-block">
+                <i class="fas fa-fire text-orange-500 w-[28px] fa-2xl"></i>
+            </a>
+
+            <a href="/" class="ml-4">
+                <i class="fas fa-home mr-2"></i>
+                Home
+            </a>
+        </div>
+        <div>
+
+        <span class="cursor-pointer inline-block rounded-full border-2 border-blue-600 w-[32px] h-[32px] bg-blue-500 flex justify-center items-center">
+            {{ request.user|make_list|first|upper }}
+        </span>
+        </div>
+    </header>
+
+    <div class="grid grid-cols-1 md:grid-cols-[auto_1fr]">
+        <aside id="sideNavigation"
+               class="bg-[#1D2327] text-white absolute z-10 h-[calc(100vh-50px)] w-max-content md:relative md:w-auto overflow-y-auto hidden md:block">
+            {% sidebar_navigations %}
+        </aside>
+
+        {% block main %}
+            <main class="p-2 md:p-8 w-full min-h-full overflow-y-auto bg-[#efefef] h-[calc(100vh-50px)]">
+                {% block content %}
+                {% endblock %}
+            </main>
+        {% endblock %}
+    </div>
+</div>
+
+<script>
+    let toggledMenu = false;
+    const toggleBtn = document.querySelector("#toggle");
+    const sideNavigation = document.querySelector("#sideNavigation");
+
+    toggleBtn.addEventListener("click", () => {
+        toggledMenu = !toggledMenu;
+        if (toggledMenu) {
+            sideNavigation.classList.remove("hidden");
+            sideNavigation.classList.add("block");
+        } else {
+            sideNavigation.classList.remove("block");
+            sideNavigation.classList.add("hidden");
+            sideNavigation.classList.add("md:block")
+        }
+    });
+</script>
+</body>
+</html>

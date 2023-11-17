@@ -1,0 +1,7 @@
+site_name: DJ Admin Plus
+
+nav:
+  - Getting Started: README.md
+  - Advanced Usage: advanced-usage.md
+
+theme: readthedocs
