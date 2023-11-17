@@ -51,7 +51,6 @@ class AdminLoginView(View):
 
             form.add_error(None, 'Invalid email or password')
 
-        print(form.errors)
         return render(request, 'dj_admin_plus/auth/login.html', {
             'username_field': self.get_username_field(),
             'form': form
