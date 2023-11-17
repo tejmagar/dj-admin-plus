@@ -44,10 +44,11 @@
             <div id="accountBtn"
                  class="select-none cursor-pointer inline-block rounded-full border-2 border-blue-600 w-[32px] h-[32px] bg-blue-500 flex justify-center items-center">
                 {{ request.user|make_list|first|upper }}
+            </div>
 
-                <div id="accountDropdown"
-                     class="min-w-[180px] bg-white text-neutral-800 rounded-2xl hidden">
-                    <div class="p-4">
+            <div id="accountDropdown"
+                 class="min-w-[180px] bg-white text-neutral-800 rounded-2xl hidden">
+                <div class="p-4">
                     <span class="block font-medium">
                         {% if request.user.first_name and request.user.last_name %}
                             {{ request.user.first_name }} {{ request.user.last_name }}
@@ -55,30 +56,29 @@
                             {{ request.user }}
                         {% endif %}
                     </span>
-                        <span class="block text-[13px] font-medium">
+                    <span class="block text-[13px] font-medium">
                         {% if request.user.email %}
                             {{ request.user.email }}
                         {% endif %}
                     </span>
-                    </div>
+                </div>
 
-                    <hr>
+                <hr>
 
-                    <div class="py-2">
-                        <ul>
-                            <li class="px-4 py-2 hover:bg-blue-200">
-                                <a href="" class="font-medium">
-                                    <i class="fas fa-user fa-lg mr-2"></i>My Profile
-                                </a>
-                            </li>
+                <div class="py-2">
+                    <ul>
+                        <li class="px-4 py-2 hover:bg-blue-200">
+                            <a href="{% user_info_change_url request.user %}" class="font-medium">
+                                <i class="fas fa-user fa-lg mr-2"></i>My Profile
+                            </a>
+                        </li>
 
-                            <li class="px-4 py-2 hover:bg-blue-200">
-                                <a href="" class="font-medium">
-                                    <i class="fas fa-right-from-bracket mr-2"></i>Logout
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
+                        <li class="px-4 py-2 hover:bg-blue-200">
+                            <a href="{% url 'dj_admin_plus_logout' %}" class="font-medium">
+                                <i class="fas fa-right-from-bracket mr-2"></i>Logout
+                            </a>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
@@ -124,31 +124,33 @@
     const accountDropdown = document.querySelector("#accountDropdown");
     let accountDropdownShow = false;
 
+    let popperInstance = null;
+
     accountBtn.addEventListener("click", () => {
-        accountDropdownShow = !accountDropdownShow;
-
-        if (accountDropdownShow) {
-            accountDropdown.classList.remove("hidden");
-            accountDropdown.classList.add("block");
-
-            // Creating popper during load will create overflow issue.
+        if (!popperInstance) {
             Popper.createPopper(accountBtn, accountDropdown, {
                 placement: "bottom-start",
                 modifiers: [
                     {
                         name: 'offset',
                         options: {
-                            offset: [0, 10]  // Adjust the second value (10) to the desired number of pixels
+                            offset: [0, 16]  // Adjust the second value (10) to the desired number of pixels
                         }
                     }
                 ]
             });
+        }
 
+        accountDropdownShow = !accountDropdownShow;
+
+        if (accountDropdownShow) {
+            accountDropdown.classList.remove("hidden");
+            accountDropdown.classList.add("block");
         } else {
             accountDropdown.classList.remove("block");
             accountDropdown.classList.add("hidden");
         }
-    });
+    })
 </script>
 </body>
 </html>

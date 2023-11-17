@@ -10,6 +10,6 @@ class AdminLoginRequiredMixin(AccessMixin):
 
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
-            return redirect(f'{reverse("dj_admin_login")}?next={request.path}')
+            return redirect(f'{reverse("dj_admin_plus_login")}?next={request.path}')
 
         return super().dispatch(request, *args, **kwargs)

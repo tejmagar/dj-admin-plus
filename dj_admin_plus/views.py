@@ -4,11 +4,11 @@ from typing import Type
 
 from django.apps import apps
 from django.contrib import admin
-from django.contrib.auth import get_user_model, authenticate, login
+from django.contrib.auth import get_user_model, authenticate, login, logout
 from django.contrib.auth.forms import SetPasswordForm
 from django.core.paginator import Paginator
 from django.db.models import Model
-from django.http import Http404, HttpResponseForbidden, HttpResponse, HttpResponseRedirect
+from django.http import Http404, HttpResponseForbidden, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template.defaultfilters import safe
 from django.urls import reverse
@@ -56,6 +56,12 @@ class AdminLoginView(View):
             'username_field': self.get_username_field(),
             'form': form
         })
+
+
+class AdminLogoutView(View):
+    def get(self, request):
+        logout(request)
+        return redirect(reverse('dj_admin_plus_login'))
 
 
 # noinspection PyProtectedMember
