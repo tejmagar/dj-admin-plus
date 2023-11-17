@@ -1,0 +1,43 @@
+/**
+  * This contains hard coded css for django form.
+  */
+
+
+.form-group .field > input, .form-group textarea {
+    width: 100%;
+    padding: 8px 12px;
+    border-radius: 8px;
+}
+
+.form-group a {
+    color: blue;
+}
+
+.form-group input[type='file'],
+.form-group input[type='color'],
+.form-group input[type='checkbox'],
+.form-group input[type='radio'] {
+    width: max-content !important;
+}
+
+.form-group input[type='file'],
+.form-group input[type='select'] {
+    padding: 2px !important;
+}
+
+.form-group select {
+    width: 98%;
+    max-width: 800px;
+    border-radius: 8px;
+    padding: 2px 8px;
+    border: 1px solid black;
+}
+
+/*
+ * Select and style inner field tags
+ */
+.form-group .field * > * {
+    margin-bottom: 12px;
+    padding: 2px 8px;
+    border-radius: 8px;
+}
