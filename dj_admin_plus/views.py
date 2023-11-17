@@ -5,6 +5,7 @@ from typing import Type
 from django.apps import apps
 from django.contrib import admin
 from django.contrib.auth import get_user_model, authenticate, login
+from django.contrib.auth.forms import SetPasswordForm
 from django.core.paginator import Paginator
 from django.db.models import Model
 from django.http import Http404, HttpResponseForbidden, HttpResponse, HttpResponseRedirect
@@ -348,4 +349,35 @@ class EditModelView(BaseModelView):
             'title.html': f'{operation} {model_name.lower()}',
             'form': form,
             'add_mode': self.add_mode
+        })
+
+
+class ChangePassword(BaseModelView):
+    def get(self, request, **kwargs):
+        pk = kwargs.get('pk')
+        user = get_object_or_404(get_user_model(), pk=pk)
+        form = SetPasswordForm(user)
+
+        return render(request, 'dj_admin_plus/auth/change-password.html', {
+            'form': form
+        })
+
+    def post(self, request, **kwargs):
+        pk = kwargs.get('pk')
+        app_label = kwargs.get('app_label')
+        model_name = kwargs.get('model_name')
+
+        user = get_object_or_404(get_user_model(), pk=pk)
+        form = SetPasswordForm(user, data=request.POST)
+
+        if form.is_valid():
+            form.save()
+            return redirect(reverse('change_model_view', kwargs={
+                'app_label': app_label,
+                'model_name': model_name,
+                'pk': pk
+            }))
+
+        return render(request, 'dj_admin_plus/auth/change-password.html', {
+            'form': form
         })

@@ -2,49 +2,6 @@
 {% load dj_admin_plus %}
 
 {% block content %}
-    <style>
-        /**
-         * This contains hard coded css for django form.
-         */
-
-
-        .form-group .field > input, textarea {
-            width: 100%;
-            padding: 8px 12px;
-            border-radius: 8px;
-        }
-
-        .form-group a {
-            color: blue;
-        }
-
-        input[type='file'], input[type='color'], input[type='checkbox'], input[type='radio'] {
-            width: max-content !important;
-        }
-
-        input[type='file'], input[type='select'] {
-            padding: 2px !important;
-        }
-
-        select {
-            width: 98%;
-            max-width: 800px;
-            border-radius: 8px;
-            padding: 2px 8px;
-            border: 1px solid black;
-        }
-
-        /*
-         * Select and style inner field tags
-         */
-        .form-group .field * > * {
-            margin-bottom: 12px;
-            padding: 2px 8px;
-            border-radius: 8px;
-        }
-
-    </style>
-
     {% include 'dj_admin_plus/title.html' with title=title %}
 
     <form class="{% if not fieldsets %} w-[800px] {% endif %} text-neutral-700 text-sm max-w-full overflow-x-auto"

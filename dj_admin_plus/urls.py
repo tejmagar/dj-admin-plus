@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import AdminView, ModelView, EditModelView, AdminLoginView
+from .views import AdminView, ModelView, EditModelView, AdminLoginView, ChangePassword
 
 urlpatterns = [
     path('', AdminView.as_view(), name='dj_admin_plus'),
@@ -9,5 +9,6 @@ urlpatterns = [
     path('<str:app_label>/<str:model_name>/<int:pk>/change/', EditModelView.as_view(),
          name='change_model_view'),
 
-    path('login/', AdminLoginView.as_view(), name='dj_admin_login')
+    path('login/', AdminLoginView.as_view(), name='dj_admin_login'),
+    path('<str:app_label>/<str:model_name>/<int:pk>/password/', ChangePassword.as_view(), name='change_password'),
 ]
