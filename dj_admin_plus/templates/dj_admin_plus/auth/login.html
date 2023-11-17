@@ -1,5 +1,7 @@
-<!DOCTYPE html>
+{% load static %}
 {% load dj_admin_plus %}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <title>DJ Admin Plus</title>
@@ -20,15 +22,52 @@
     </style>
 </head>
 <body>
-<div class="h-screen grid justify-center items-center bg-[#e1e1e1]">
-    <form action="" class="w-[600px] max-w-[100%] bg-white rounded-2xl">
-        <div class="bg-blue-600 text-white rounded-t-2xl">
-            <h1 class="text-center p-2 font-semibold">DJ Admin</h1>
-        </div>
-        <div class="p-8">
-            <label for="">Username</label>
-            <input type="text">
-            <input type="password">
+<div class="text-sm h-screen grid justify-center items-center bg-[#e1e1e1]">
+    <form action="{% url 'dj_admin_login' %}{% if rquest.GET.next %}next?={{ request.GET.next }}{% endif %}"
+          method="POST" class="w-[500px] max-w-[100%] bg-white rounded-2xl p-8">
+        <h1 class="block text-purple-700 text-2xl font-semibold">Sign In</h1>
+
+        {% csrf_token %}
+
+        <div class="mt-8">
+            <div>
+                <label for="{{ username_field.name }}"
+                       class="font-medium">
+                    {{ username_field.name|title }}
+                </label>
+
+                <input type="{% if username_field.name == 'email' %}email{% else %}text{% endif %}"
+                       id="{{ username_field.name }}"
+                       name="login"
+                       class="mt-2 block border-2 border-black w-full rounded px-2 py-2 rounded-lg"
+                        {% if form.login.value %}
+                       value="{{ form.login.value }}"
+                        {% endif %}
+                       required>
+
+                {% if form.login.errors %}
+                    <span class="block mt-2 text-red-500">{{ form.login.errors }}</span>
+                {% endif %}
+            </div>
+
+            <div class="mt-4">
+                <label for="password" class="font-medium">Password</label>
+                <input id="password" type="password" name="password"
+                       class="mt-2 block border-2 border-black w-full rounded px-2 py-2 rounded-lg"
+                       required>
+
+                {% if form.password.errors %}
+                    <span class="block mt-2 text-red-500">{{ form.password.errors }}</span>
+                {% endif %}
+            </div>
+
+            <div class="mt-8">
+                {% if form.non_field_errors %}
+                    <span class="block mb-4 text-red-500">{{ form.non_field_errors }}</span>
+                {% endif %}
+
+                <button class="w-full bg-purple-700 text-white rounded-xl py-4 font-semibold px-8">Login</button>
+            </div>
         </div>
     </form>
 </div>

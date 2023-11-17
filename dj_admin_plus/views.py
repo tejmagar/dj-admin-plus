@@ -4,9 +4,10 @@ from typing import Type
 
 from django.apps import apps
 from django.contrib import admin
+from django.contrib.auth import get_user_model, authenticate, login
 from django.core.paginator import Paginator
 from django.db.models import Model
-from django.http import Http404, HttpResponseForbidden, HttpResponse
+from django.http import Http404, HttpResponseForbidden, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template.defaultfilters import safe
 from django.urls import reverse
@@ -16,15 +17,45 @@ from dj_admin_plus import utils, navigation
 from dj_admin_plus.utils import update_form_widgets
 from dj_admin_plus.mixins import AdminLoginRequiredMixin
 
+from .forms import AdminLoginForm
+
 
 # Create your views here.
 
 class AdminLoginView(View):
+
+    def get_username_field(self):
+        user_model = get_user_model()
+        return getattr(user_model, user_model.USERNAME_FIELD).field
+
     def get(self, request):
-        return render(request, 'dj_admin_plus/auth/login.html')
+        return render(request, 'dj_admin_plus/auth/login.html', {
+            'username_field': self.get_username_field(),
+        })
 
     def post(self, request):
-        return HttpResponse('Login form')
+        redirect_to = request.GET.get('next', reverse('dj_admin_plus'))
+
+        form = AdminLoginForm(data=request.POST)
+
+        if form.is_valid():
+            credentials = {
+                'username': form.cleaned_data['login'],
+                'password': form.cleaned_data['password']
+            }
+            print(credentials)
+            user = authenticate(request, **credentials)
+            if user:
+                login(request, user)
+                return HttpResponseRedirect(redirect_to)
+
+            form.add_error(None, 'Invalid email or password')
+
+        print(form.errors)
+        return render(request, 'dj_admin_plus/auth/login.html', {
+            'username_field': self.get_username_field(),
+            'form': form
+        })
 
 
 # noinspection PyProtectedMember
@@ -84,7 +115,7 @@ class AdminView(AdminLoginRequiredMixin, View):
                 'model_name': model_name
             }))
 
-        return render(request, 'dj_admin_plus/help.html')
+        return render(request, 'dj_admin_plus/setup-default-view.html')
 
 
 class Permission(enum.Enum):
