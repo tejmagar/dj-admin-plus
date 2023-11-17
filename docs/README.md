@@ -91,6 +91,8 @@ For sidebar icons, DJ Admin plus uses [free font awesome solid icons](https://fo
 ## Configure default navigation page
 
 You need to choose the default page when [http://127.0.0.1:8000](http://127.0.0.1:8000) is visited.
+It is because DJ Admin plus don't know which page to show first until you specify.
+
 There are two ways to set up default page in DJ Admin plus.
 
 ### Option 1: Set first navigation as a default page
