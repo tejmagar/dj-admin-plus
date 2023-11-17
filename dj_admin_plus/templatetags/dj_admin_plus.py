@@ -1,6 +1,5 @@
 from django import template
 from django.contrib.auth import get_user_model
-from django.forms import widgets
 from django.urls import reverse
 
 from .. import navigation
@@ -29,6 +28,7 @@ def get_form_field_from_name(form, field_name):
         return None
 
 
+# noinspection PyProtectedMember
 @register.simple_tag
 def user_info_change_url(user):
     user_model = get_user_model()
