@@ -24,6 +24,6 @@ jobs:
           key: ${{github.ref}}
           path: cache
       - run: pip install mkdocs
-      - run: mkdocs gh-deploy
+      - run: mkdocs gh-deploy -f
 
 
