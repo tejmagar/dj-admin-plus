@@ -190,6 +190,8 @@ class ModelView(BaseModelView):
         return safe(value)
 
     def get_value_from_field(self, model_admin, item, display_item):
+
+        """ Fetch directly from model field """
         if hasattr(item, display_item):
             func = getattr(item, display_item)
 
@@ -203,6 +205,7 @@ class ModelView(BaseModelView):
 
             return str(value)
 
+        # Fetch from model admin class
         if hasattr(model_admin, display_item):
             func = getattr(model_admin, display_item)
             value = func(item)
@@ -227,30 +230,42 @@ class ModelView(BaseModelView):
 
         return display_objects
 
+    def verbose_list_display(self, list_display, model_class):
+        verbose_label_list = []
+
+        for list_label in list_display:
+            if hasattr(model_class, list_label):
+                deferred_field = getattr(model_class, list_label)
+                verbose_label_list.append(deferred_field.field.verbose_name.upper())
+            else:
+                verbose_label_list.append(list_label.upper())
+
+        return verbose_label_list
+
     # noinspection PyProtectedMember
     def get(self, request, **kwargs):
         app_label, model_name = self.get_app_label_and_model_name(**kwargs)
         self.validate_permission_or_raise_404(request, app_label, model_name, Permission.VIEW)
 
         model_class = self.get_model_class(app_label, model_name)
-        admin_class = self.get_model_admin(model_class).__class__
+        model_admin = self.get_model_admin(model_class)
+        admin_class = model_admin.__class__
         list_display = admin_class.list_display
-
         page_number = request.GET.get('page')
         items = model_class.objects.order_by('-pk').all()
         paginator = Paginator(items, admin_class.list_per_page)
         page = paginator.get_page(page_number)
-
         model_admin = admin_class(model_class, admin.site)
 
         items = self.construct_items(model_admin, page.object_list, list_display)
+        list_display_verbose = self.verbose_list_display(list_display, model_class)
         return render(request, 'dj_admin_plus/view-items.html', {
             'app_label': app_label,
             'model_name': model_name,
             'title': model_class._meta.verbose_name_plural.title(),
             'items': items,
             'default_field_name': model_class._meta.verbose_name.upper(),
-            'list_display': list_display
+            'list_display': list_display_verbose
         })
 
 
