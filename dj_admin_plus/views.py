@@ -1,15 +1,15 @@
 import enum
 from abc import ABC
-from typing import Type
+from typing import Type, Tuple, Any
 
 from django.apps import apps
 from django.contrib import admin
 from django.contrib.auth import get_user_model, authenticate, login, logout
 from django.contrib.auth.forms import SetPasswordForm
 from django.core.paginator import Paginator
-from django.db.models import Model
+from django.db.models import Model, Field
 from django.db.models.query_utils import DeferredAttribute
-from django.http import Http404, HttpResponseForbidden, HttpResponseRedirect
+from django.http import Http404, HttpResponseForbidden, HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template.defaultfilters import safe
 from django.urls import reverse
@@ -26,16 +26,16 @@ from .forms import AdminLoginForm
 
 class AdminLoginView(View):
 
-    def get_username_field(self):
+    def get_username_field(self) -> Field:
         user_model = get_user_model()
         return getattr(user_model, user_model.USERNAME_FIELD).field
 
-    def get(self, request):
+    def get(self, request) -> HttpResponse:
         return render(request, 'dj_admin_plus/auth/login.html', {
             'username_field': self.get_username_field(),
         })
 
-    def post(self, request):
+    def post(self, request) -> HttpResponse:
         redirect_to = request.GET.get('next', reverse('dj_admin_plus'))
 
         form = AdminLoginForm(data=request.POST)
@@ -60,14 +60,14 @@ class AdminLoginView(View):
 
 
 class AdminLogoutView(View):
-    def get(self, request):
+    def get(self, request) -> HttpResponse:
         logout(request)
         return redirect(reverse('dj_admin_plus_login'))
 
 
 # noinspection PyProtectedMember
 class AdminView(AdminLoginRequiredMixin, View):
-    def get(self, request, **kwargs):
+    def get(self, request: Any, **kwargs) -> HttpResponse:
         navigation_manager = navigation.default_manager
 
         if len(navigation_manager.items) == 0:
@@ -126,6 +126,10 @@ class AdminView(AdminLoginRequiredMixin, View):
 
 
 class Permission(enum.Enum):
+    """
+    Available model permission for a model
+    """
+
     VIEW = 'view'
     ADD = 'add'
     CHANGE = 'change'
@@ -133,21 +137,21 @@ class Permission(enum.Enum):
 
 
 class BaseModelView(AdminLoginRequiredMixin, View, ABC):
-    def get_app_label_and_model_name(self, **kwargs):
+    def get_app_label_and_model_name(self, **kwargs) -> Tuple[str, str]:
         app_label = kwargs.get('app_label')
         model_name = kwargs.get('model_name')
         return app_label, model_name
 
-    def get_model_class(self, app_label, model_name) -> Type[Model]:
+    def get_model_class(self, app_label: str, model_name: str) -> Type[Model]:
         try:
             return apps.get_model(app_label, model_name=model_name)
         except LookupError:
             raise Http404(f'Model {model_name} for app name {app_label} does not exist.')
 
-    def has_model_permission(self, user, app_label, model_name, permission: Permission):
+    def has_model_permission(self, user: Any, app_label: str, model_name: str, permission: Permission) -> bool:
         return user.has_perm(f'{app_label}.{permission}_{model_name}')
 
-    def has_navigation_permission(self, request, app_label, model_name) -> bool:
+    def has_navigation_permission(self, request: Any, app_label: str, model_name: str) -> bool:
         """
         Since Base model view deals with only model based view, we will query all the matching model.
 
@@ -168,21 +172,25 @@ class BaseModelView(AdminLoginRequiredMixin, View, ABC):
 
         return True
 
-    def validate_permission_or_raise_404(self, request, app_label, model_name,
+    def validate_permission_or_raise_404(self, request, app_label: str, model_name: str,
                                          permission: Permission):
         has_view_permission = self.has_model_permission(request.user, app_label, model_name, permission)
 
         if not has_view_permission or not self.has_navigation_permission(request, app_label, model_name):
             raise Http404()
 
-    def get_model_admin(self, model_class):
+    def get_model_admin(self, model_class: Type[Model]):
         # noinspection PyProtectedMember
         return admin.site._registry[model_class]
 
 
 class ModelView(BaseModelView):
 
-    def bool_to_symbol(self, value):
+    def bool_to_symbol(self, value: bool) -> str:
+        """
+        Shows check box or wrong mark instead of True or False in Admin interface while used with `list_display`.
+        """
+
         if value:
             value = '<span style="color:green; font-size: 20px;">✓</span>'
         else:
