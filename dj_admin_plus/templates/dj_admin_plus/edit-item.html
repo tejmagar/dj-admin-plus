@@ -52,9 +52,9 @@
 
         <div class="flex gap-x-4 mt-8 justify-end items-center">
             {% if not add_mode %}
-                <button type="submit" name="delete" value="Delete"
+                <button type="button" name="delete" value="Delete"
                         class="text-red-600 px-4 py-2"
-                        onclick="return confirm('Do you want to delete?\nThis action cannot be reversed.')">
+                        onclick="if(confirm('Do you want to delete?\nThis action cannot be reversed.'))this.form.submit()">
                     Delete
                 </button>
             {% endif %}
