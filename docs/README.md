@@ -7,7 +7,7 @@ Django admin plus helps you to create beautiful admin interface quickly in minim
 ## Installation
 
 ```bash
-pip install -i https://test.pypi.org/simple/ dj-admin-plus==0.0.6
+pip install dj-admin-plus
 ```
 
 ## Update your settings file
