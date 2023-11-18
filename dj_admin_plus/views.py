@@ -182,7 +182,11 @@ class BaseModelView(AdminLoginRequiredMixin, View, ABC):
 
     def get_model_admin(self, model_class: Type[Model]):
         # noinspection PyProtectedMember
-        return admin.site._registry[model_class]
+        model_admin = admin.site._registry.get(model_class)
+        if not model_admin:
+            raise Http404(f'{model_class} is not registered.')
+
+        return model_admin
 
 
 class ModelView(BaseModelView):
