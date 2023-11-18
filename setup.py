@@ -5,7 +5,7 @@ with open("README.md", "r") as file:
 
 setup(
     name="dj-admin-plus",
-    version="0.0.7",
+    version="0.0.1",
     description="A customizable model theme for Django Admin",
     long_description=long_description,
     long_description_content_type="text/markdown",

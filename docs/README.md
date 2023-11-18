@@ -1,6 +1,6 @@
 # Django Admin Plus
 
-Django admin plus helps you to create beautiful admin interface in minimal steps.
+Django admin plus helps you to create beautiful admin interface quickly in minimal steps.
 
 <img src="images/demo.png" alt="Demo">
 
