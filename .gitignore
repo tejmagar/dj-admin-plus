@@ -6,6 +6,7 @@ site/
 test_app/
 config/
 media/
+.idea/
 dj_admin_plus.egg-info/
 db.sqlite3
 manage.py
