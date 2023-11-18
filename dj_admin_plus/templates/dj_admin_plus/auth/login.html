@@ -23,7 +23,7 @@
 </head>
 <body>
 <div class="text-sm h-screen grid justify-center items-center bg-[#e1e1e1]">
-    <form action="{% url 'dj_admin_plus_login' %}{% if request.GET.next %}next?={{ request.GET.next }}{% endif %}"
+    <form action="{% url 'dj_admin_plus_login' %}{% if request.GET.next %}?next={{ request.GET.next }}{% endif %}"
           method="POST" class="w-[500px] max-w-[98%] mx-auto bg-white rounded-2xl p-8">
         <h1 class="block text-purple-700 text-2xl font-semibold">Sign In</h1>
 

@@ -259,6 +259,9 @@ class ModelView(BaseModelView):
                     else:
                         verbose_label_list.append(list_label.upper())
 
+                else:
+                    verbose_label_list.append(list_label.upper())
+
         return verbose_label_list
 
     # noinspection PyProtectedMember
