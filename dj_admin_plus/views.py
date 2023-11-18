@@ -4,6 +4,7 @@ from typing import Type, Tuple, Any
 
 from django.apps import apps
 from django.contrib import admin
+from django.contrib.admin import ModelAdmin
 from django.contrib.auth import get_user_model, authenticate, login, logout
 from django.contrib.auth.forms import SetPasswordForm
 from django.core.paginator import Paginator
@@ -198,11 +199,11 @@ class ModelView(BaseModelView):
 
         return safe(value)
 
-    def get_value_from_field(self, model_admin, item, display_item):
+    def get_value_from_field(self, admin_class: Type[ModelAdmin], instance: Model, display_item: str):
 
         """ Fetch directly from model field """
-        if hasattr(item, display_item):
-            func = getattr(item, display_item)
+        if hasattr(instance, display_item):
+            func = getattr(instance, display_item)
 
             if callable(func):
                 value = func()
@@ -215,9 +216,9 @@ class ModelView(BaseModelView):
             return str(value)
 
         # Fetch from model admin class
-        if hasattr(model_admin, display_item):
-            func = getattr(model_admin, display_item)
-            value = func(item)
+        if hasattr(admin_class, display_item):
+            func = getattr(admin_class, display_item)
+            value = func(instance)
 
             if type(value) == bool:
                 value = self.bool_to_symbol(value)
@@ -226,24 +227,25 @@ class ModelView(BaseModelView):
 
         return None
 
-    def construct_items(self, admin_class, object_list, display_items):
+    def construct_items(self, admin_class: Type[ModelAdmin], object_list, display_items):
         display_objects = []
 
-        for item in object_list:
+        for instance in object_list:
             record = []
 
             for display_item in display_items:
-                record.append(self.get_value_from_field(admin_class, item, display_item))
+                record.append(self.get_value_from_field(admin_class, instance, display_item))
 
-            display_objects.append((item.pk, record))
+            display_objects.append((instance.pk, record))
 
         return display_objects
 
     # noinspection PyProtectedMember
-    def verbose_list_display(self, list_display, model_class):
+    def verbose_list_display(self, list_display: Tuple, model_class: Type[Model]):
         verbose_label_list = []
 
         for list_label in list_display:
+            # List display is not set in model admin class
             if list_label == '__str__':
                 verbose_label_list.append(model_class._meta.verbose_name.upper())
 
