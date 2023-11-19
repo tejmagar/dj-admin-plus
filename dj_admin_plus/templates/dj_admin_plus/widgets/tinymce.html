@@ -1,5 +1,5 @@
 {% load static %}
-<textarea name="{{ widget.name }}" id="{{ widget.name }}" {% include "django/forms/widgets/attrs.html" %}>
+<textarea name="{{ widget.name }}" {% include "django/forms/widgets/attrs.html" %}>
     {% if widget.value %}
         {{ widget.value }}
     {% endif %}
