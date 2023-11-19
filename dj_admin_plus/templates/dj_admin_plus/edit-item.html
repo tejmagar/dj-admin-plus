@@ -59,8 +59,10 @@
                 </button>
             {% endif %}
 
-            <input type="submit" name="save" value="Save"
-                   class="bg-[#2371B0] hover:bg-blue-500 text-white px-6 py-2  rounded-full">
+            <button type="button" onclick="this.form.submit()"
+                   class="bg-[#2371B0] hover:bg-blue-500 text-white px-6 py-2 rounded-full">
+                Save
+            </button>
         </div>
     </form>
 {% endblock %}

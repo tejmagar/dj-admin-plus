@@ -1,3 +1,4 @@
+import json
 from typing import Optional
 
 from django.forms import Widget
@@ -27,12 +28,23 @@ class DJFileInput(Widget):
 class TinyMCE(Widget):
     template_name = 'dj_admin_plus/widgets/tinymce.html'
 
-    def __init__(self, attrs):
-        if attrs is not None:
-            attrs.copy()
+    class Media:
+        js = ['tinymce/js/tinymce/tinymce.min.js']
 
+    def __init__(self, attrs, tinymce_config=None):
+        if attrs is not None:
+            attrs = attrs.copy()
+
+        self.tinymce_config = tinymce_config
         super().__init__(attrs)
 
     def get_context(self, name, value, attrs):
         context = super().get_context(name, value, attrs)
+        if not self.tinymce_config:
+            self.tinymce_config = {}
+
+        self.tinymce_config['branding'] = False
+        self.tinymce_config['promotion'] = False
+        self.tinymce_config['selector'] = f'#{name}'
+        context['widget']['tinymce_config'] = json.dumps(self.tinymce_config)
         return context

@@ -1,10 +1,10 @@
 {% load static %}
-
-<script src="{% static 'tinymce/js/tinymce/tinymce.min.js' %}"></script>
-<script>
-    tinymce.init({selector: '#{{ widget.name }}'});
-</script>
-
-
 <textarea name="{{ widget.name }}" id="{{ widget.name }}" {% include "django/forms/widgets/attrs.html" %}>
+    {% if widget.value %}
+        {{ widget.value }}
+    {% endif %}
 </textarea>
+
+<script>
+    tinymce.init({{ widget.tinymce_config|safe }});
+</script>
