@@ -17,11 +17,11 @@
             <input aria-label="check" name="select_all" type="checkbox" class="transform scale-125">
 
             {% for title in list_display %}
-            {% if title == '__str__' %}
-            <span class="font-medium">{{ default_field_name }}</span>
-            {% else %}
-            <span class="font-medium">{{ title }}</span>
-            {% endif %}
+                {% if title == '__str__' %}
+                <span class="font-medium">{{ default_field_name }}</span>
+                {% else %}
+                <span class="font-medium">{{ title }}</span>
+                {% endif %}
             {% endfor %}
         </div>
 
@@ -62,10 +62,10 @@
 
 <div class="flex justify-center gap-x-2 my-8 text-sm">
     {% if total_pages > 1 %}
-    {% for number in page_numbers %}
-    <a href="?page={{ number }}"
-       class="rounded px-2 py {% if not number == page.number %}} bg-blue-500 text-white {% endif %}">{{ number }}</a>
-    {% endfor %}
+        {% for number in page_numbers %}
+        <a href="?page={{ number }}"
+           class="rounded px-2 py {% if not number == page.number %}} bg-blue-500 text-white {% endif %}">{{ number }}</a>
+        {% endfor %}
     {% endif %}
 
     <span class="text-neutral-700">{{ total_objects }} {{ title|lower }}</span>
