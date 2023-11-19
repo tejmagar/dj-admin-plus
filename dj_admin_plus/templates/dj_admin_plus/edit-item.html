@@ -4,7 +4,7 @@
 {% block content %}
     {% include 'dj_admin_plus/title.html' with title=title %}
 
-    <form class="{% if not fieldsets %} w-[800px] {% endif %} text-neutral-700 text-sm max-w-full overflow-x-auto"
+    <form class="{% if not full_view_mode %} w-[800px] {% endif %} text-neutral-700 text-sm max-w-full overflow-x-auto"
           method="POST"
           enctype="multipart/form-data">
         {% csrf_token %}

@@ -323,6 +323,10 @@ class EditModelView(BaseModelView):
 
         return None
 
+    def should_full_view_mode(self, fieldsets):
+        # More to implement later
+        return True if fieldsets else False
+
     def get(self, request, **kwargs):
         app_label, model_name = self.get_app_label_and_model_name(**kwargs)
         self.validate_permission_or_raise_404(request, app_label, model_name, Permission.ADD)
@@ -343,13 +347,15 @@ class EditModelView(BaseModelView):
 
         form = update_form_widgets(form)
         operation = 'Add' if self.add_mode else 'Change'
-
+        fieldsets = self.get_current_fieldsets(model_admin, self.add_mode)
+        show_full_view = self.should_full_view_mode(fieldsets)
         return render(request, 'dj_admin_plus/edit-item.html', {
             'app_label': app_label,
             'model_name': model_name,
             'title': f'{operation} {model_name.lower()}',
-            'fieldsets': self.get_current_fieldsets(model_admin, self.add_mode),
+            'fieldsets': fieldsets,
             'form': form,
+            'full_view_mode': show_full_view,
             'add_mode': self.add_mode
         })
 
@@ -402,13 +408,16 @@ class EditModelView(BaseModelView):
 
         form = update_form_widgets(form)
         operation = 'Add' if self.add_mode else 'Change'
+        fieldsets = self.get_current_fieldsets(model_admin, self.add_mode)
+        show_full_view = self.should_full_view_mode(fieldsets)
 
         return render(request, 'dj_admin_plus/edit-item.html', {
             'app_label': app_label,
             'model_name': model_name,
-            'fieldsets': self.get_current_fieldsets(model_admin, self.add_mode),
-            'title.html': f'{operation} {model_name.lower()}',
+            'fieldsets': fieldsets,
+            'title': f'{operation} {model_name.lower()}',
             'form': form,
+            'full_view_mode': show_full_view,
             'add_mode': self.add_mode
         })
 
