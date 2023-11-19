@@ -1,0 +1,10 @@
+{% load static %}
+
+<script src="{% static 'tinymce/js/tinymce/tinymce.min.js' %}"></script>
+<script>
+    tinymce.init({selector: '#{{ widget.name }}'});
+</script>
+
+
+<textarea name="{{ widget.name }}" id="{{ widget.name }}" {% include "django/forms/widgets/attrs.html" %}>
+</textarea>
