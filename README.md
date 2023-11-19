@@ -14,7 +14,7 @@ Unlike default Django admin, DJ Admin plus allows you to customize your navigati
 - Preview in image field
 - Better selection for Many To Many fields
 - Media library for file uploads like WordPress which let you choose files uploaded in the past.
-- In built content editor (WYSWYG) with TinyMCE
+- In built content editor (WYSIWYG) with TinyMCE
 
 Currently, some admin features may be missing, we will add them too.
 
