@@ -67,14 +67,14 @@
 
                 <div class="py-2">
                     <ul>
-                        <li class="px-4 py-2 hover:bg-blue-200">
-                            <a href="{% user_info_change_url request.user %}" class="font-medium">
+                        <li>
+                            <a href="{% user_info_change_url request.user %}" class="block px-4 py-2 hover:bg-blue-200 font-medium">
                                 <i class="fas fa-user fa-lg mr-2"></i>My Profile
                             </a>
                         </li>
 
-                        <li class="px-4 py-2 hover:bg-blue-200">
-                            <a href="{% url 'dj_admin_plus_logout' %}" class="font-medium">
+                        <li>
+                            <a href="{% url 'dj_admin_plus_logout' %}" class="block px-4 py-2 hover:bg-blue-200 font-medium">
                                 <i class="fas fa-right-from-bracket mr-2"></i>Logout
                             </a>
                         </li>

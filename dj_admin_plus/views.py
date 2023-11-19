@@ -232,6 +232,10 @@ class ModelView(BaseModelView):
         return None
 
     def construct_items(self, admin_class: Type[ModelAdmin], object_list, display_items):
+        """
+        Creates items from fields specified in display items.
+        """
+
         display_objects = []
 
         for instance in object_list:
@@ -277,21 +281,31 @@ class ModelView(BaseModelView):
         model_admin = self.get_model_admin(model_class)
         admin_class = model_admin.__class__
         list_display = admin_class.list_display
-        page_number = request.GET.get('page')
         items = model_class.objects.order_by('-pk').all()
         paginator = Paginator(items, admin_class.list_per_page)
+
+        page_number = int(request.GET.get('page', 1))
         page = paginator.get_page(page_number)
+        page_numbers = paginator.get_elided_page_range(page_number)
+
         model_admin = admin_class(model_class, admin.site)
 
-        items = self.construct_items(model_admin, page.object_list, list_display)
+        constructed_items = self.construct_items(model_admin, page.object_list, list_display)
         list_display_verbose = self.verbose_list_display(list_display, model_class)
+
+        total_objects = items.count()
+
         return render(request, 'dj_admin_plus/view-items.html', {
             'app_label': app_label,
             'model_name': model_name,
             'title': model_class._meta.verbose_name_plural.title(),
-            'items': items,
+            'items': constructed_items,
             'default_field_name': model_class._meta.verbose_name.upper(),
-            'list_display': list_display_verbose
+            'list_display': list_display_verbose,
+            'page': page,
+            'page_numbers': page_numbers,
+            'total_objects': total_objects,
+            'total_pages': paginator.num_pages
         })
 
 
