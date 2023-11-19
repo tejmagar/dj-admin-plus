@@ -4,7 +4,11 @@ from typing import Optional
 from django.forms import Widget
 
 
-class DJFileInput(Widget):
+class DJWidget(Widget):
+    pass
+
+
+class DJFileInput(DJWidget):
     template_name = 'dj_admin_plus/widgets/file-input.html'
 
     def __init__(self, attrs, image_preview: Optional[bool] = False):
@@ -25,7 +29,7 @@ class DJFileInput(Widget):
         return context
 
 
-class TinyMCE(Widget):
+class TinyMCE(DJWidget):
     template_name = 'dj_admin_plus/widgets/tinymce.html'
 
     class Media:
