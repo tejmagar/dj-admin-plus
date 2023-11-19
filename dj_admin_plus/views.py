@@ -317,9 +317,9 @@ class EditModelView(BaseModelView):
             if hasattr(model_admin, 'add_fieldsets'):
                 return model_admin.add_fieldsets
 
-        else:
-            if hasattr(model_admin, 'fieldsets'):
-                return model_admin.fieldsets
+        # Not every model admin may have add_fieldsets, in that case use same fieldsets
+        if hasattr(model_admin, 'fieldsets'):
+            return model_admin.fieldsets
 
         return None
 
