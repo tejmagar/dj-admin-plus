@@ -14,7 +14,11 @@ class DJFileInput(Widget):
         super().__init__(attrs)
 
     def get_context(self, name, value, attrs):
+        if value:
+            attrs['required'] = False
+            
         context = super().get_context(name, value, attrs)
+
         context['widget']['image_preview'] = True if self.image_preview and value else False
         context['widget']['preview_url'] = value.url if value else None
         return context
