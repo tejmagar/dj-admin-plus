@@ -31,24 +31,30 @@
             {% for pk, item in items %}
             <input aria-label="select" type="checkbox" class="item-select transform scale-125">
 
-            {% for field_value in item %}
-            {% if forloop.counter0 == 0 %}
-            <a href="{% url 'change_model_view' app_label model_name pk %}"
-               class="text-indigo-500 font-medium">
-                {% if field_value|length == 0 %}
-                -
-                {% else %}
-                {{ field_value }}
-                {% endif %}
-            </a>
-            {% else %}
-            {% if field_value|length == 0 %}
-            <span>-</span>
-            {% else %}
-            <span>{{ field_value }}</span>
-            {% endif %}
-            {% endif %}
-            {% endfor %}
+                {% for field_value in item %}
+                    {% if forloop.counter0 == 0 %}
+                    <div>
+                        <a href="{% url 'change_model_view' app_label model_name pk %}"
+                           class="text-indigo-500 font-medium">
+                            {% if field_value|length == 0 %}
+                            -
+                            {% else %}
+                            {{ field_value }}
+                            {% endif %}
+                        </a>
+                    </div>
+                    {% else %}
+                        {% if field_value|length == 0 %}
+                        <div>
+                            -
+                        </div>
+                        {% else %}
+                        <div>
+                            {{ field_value }}
+                        </div>
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
             {% endfor %}
         </div>
     </div>
