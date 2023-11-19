@@ -3,7 +3,7 @@
   */
 
 
-.form-group .field > input {
+.form-group .field > input, .form-group .field > textarea {
     width: 100%;
     padding: 8px 12px;
     border-radius: 8px;
@@ -33,11 +33,11 @@
     border: 1px solid black;
 }
 
-/*!**/
-/* * Select and style inner field tags*/
-/* *!*/
-/*.form-group .field * > * {*/
-/*    margin-bottom: 12px;*/
-/*    padding: 2px 8px;*/
-/*    border-radius: 8px;*/
-/*}*/
+/*
+ * Styles for user change page
+ */
+.vDateField, .vTimeField {
+    margin-bottom: 12px;
+    padding: 2px 8px;
+    border-radius: 8px;
+}

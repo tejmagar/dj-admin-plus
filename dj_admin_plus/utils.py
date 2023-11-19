@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.admin import UserAdmin
 from django.forms import ModelChoiceField, ImageField, ModelMultipleChoiceField, widgets
 
-from dj_admin_plus.widgets import DJFileInput
+from dj_admin_plus.widgets import DJFileInput, DJWidget
 
 
 def get_form_class(model_admin, request, obj=None, change=False):
@@ -33,6 +33,10 @@ def update_form_widgets(form):
     for attrs in form:
         field = attrs.field
         field.label_suffix = ''  # Remove colon from labels
+
+        if isinstance(field.widget.attrs, DJWidget):
+            # No changes required, since it's already a custom widget.
+            continue
 
         if isinstance(field, ModelChoiceField):
             modify_model_choice_field(field)
