@@ -50,19 +50,17 @@
             {% endif %}
         </div>
 
-        <div class="flex gap-x-4 mt-8 justify-end items-center">
-            {% if not add_mode %}
-                <button type="button" name="delete" value="Delete"
-                        class="text-red-600 px-4 py-2"
-                        onclick="if(confirm('Do you want to delete?\nThis action cannot be reversed.'))this.form.submit()">
-                    Delete
-                </button>
-            {% endif %}
-
-            <button type="button" onclick="this.form.submit()"
+        <div class="flex gap-x-4 flex-row-reverse mt-8 justify-start items-center">
+            <button name="save" type="submit" onclick="this.form.submit()"
                    class="bg-[#2371B0] hover:bg-blue-500 text-white px-6 py-2 rounded-full">
                 Save
             </button>
+
+            {% if not add_mode %}
+                <input type="submit" name="delete" value="Delete"
+                        class="text-red-600 px-4 py-2"
+                        onclick="return confirm('Do you want to delete?\nThis action cannot be reversed.')">
+            {% endif %}
         </div>
     </form>
 {% endblock %}
