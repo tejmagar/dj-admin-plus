@@ -72,7 +72,13 @@ class AdminLogoutView(View):
 
 # noinspection PyProtectedMember
 class AdminView(AdminLoginRequiredMixin, View):
-    def get(self, request: Any, **kwargs) -> HttpResponse:
+    def validate_permission(self, request):
+        if not request.user.is_staff:
+            raise Http404("Only allowed to staff users.")
+
+    def handle_response(self, request, **kwargs):
+        self.validate_permission(request)
+
         navigation_manager = navigation.default_manager
 
         if len(navigation_manager.items) == 0:
@@ -128,6 +134,12 @@ class AdminView(AdminLoginRequiredMixin, View):
             }))
 
         return render(request, 'dj_admin_plus/setup-default-view.html')
+
+    def get(self, request: Any, **kwargs) -> HttpResponse:
+        return self.handle_response(request, **kwargs)
+
+    def post(self, request: Any, **kwargs) -> HttpResponse:
+        return self.handle_response(request, **kwargs)
 
 
 class Permission(enum.Enum):
