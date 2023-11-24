@@ -150,7 +150,8 @@ class BaseModelView(AdminLoginRequiredMixin, View, ABC):
             raise Http404(f'Model {model_name} for app name {app_label} does not exist.')
 
     def has_model_permission(self, user: Any, app_label: str, model_name: str, permission: Permission) -> bool:
-        return user.has_perm(f'{app_label}.{permission}_{model_name}')
+        permission_query = f'{app_label}.{permission.value.lower()}_{model_name}'
+        return user.has_perm(permission_query)
 
     def has_navigation_permission(self, request: Any, app_label: str, model_name: str) -> bool:
         """
@@ -176,6 +177,7 @@ class BaseModelView(AdminLoginRequiredMixin, View, ABC):
     def validate_permission_or_raise_404(self, request, app_label: str, model_name: str,
                                          permission: Permission):
         has_view_permission = self.has_model_permission(request.user, app_label, model_name, permission)
+        print(has_view_permission)
 
         if not has_view_permission or not self.has_navigation_permission(request, app_label, model_name):
             raise Http404()
