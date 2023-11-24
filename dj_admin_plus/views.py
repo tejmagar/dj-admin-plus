@@ -176,8 +176,10 @@ class BaseModelView(AdminLoginRequiredMixin, View, ABC):
 
     def validate_permission_or_raise_404(self, request, app_label: str, model_name: str,
                                          permission: Permission):
+        if not request.user.is_staff:
+            raise Http404("Only allowed to staff users.")
+
         has_view_permission = self.has_model_permission(request.user, app_label, model_name, permission)
-        print(has_view_permission)
 
         if not has_view_permission or not self.has_navigation_permission(request, app_label, model_name):
             raise Http404()

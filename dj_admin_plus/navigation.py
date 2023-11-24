@@ -88,15 +88,37 @@ class NavigationManager(ABC):
 
         return item.url == request.path
 
+    def has_view_permission(self, request, model: Model):
+        """ Returns True if user has a permission to view model else returns False """
+
+        app_label = model._meta.app_label
+        model_name = model._meta.model_name
+        permission_query = f'{app_label}.view_{model_name}'
+        return request.user.has_perm(permission_query)
+
     def setup_navigations(self, items, request):
         for item in items:
             item.setup(request)
+
+            if item.model:
+                item.show = self.has_view_permission(request, item.model)
+
+                if not item.show:
+                    continue
+
             item.selected = self.is_selected(request, item, match_sub_url=True)
 
             children = item.children
             if children:
                 for child in item.children:
                     child.setup(request)
+
+                    if item.model:
+                        item.show = self.has_view_permission(request, item.model)
+
+                        if not item.show:
+                            continue
+
                     child.selected = self.is_selected(request, child)
 
                     # Select parent navigation also, if child path matches current url.
