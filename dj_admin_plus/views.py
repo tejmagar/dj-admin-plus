@@ -49,10 +49,14 @@ class AdminLoginView(View):
 
             user = authenticate(request, **credentials)
             if user:
-                login(request, user)
-                return HttpResponseRedirect(redirect_to)
+                if user.is_staff:
+                    login(request, user)
+                    return HttpResponseRedirect(redirect_to)
+                else:
+                    form.add_error(None, 'You don\'t have permission to login.')
 
-            form.add_error(None, 'Invalid email or password')
+            else:
+                form.add_error(None, 'Invalid email or password')
 
         return render(request, 'dj_admin_plus/auth/login.html', {
             'username_field': self.get_username_field(),
