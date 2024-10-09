@@ -1,73 +1,78 @@
 {% extends "dj_admin_plus/base.html" %}
 
 {% block content %}
-{% include 'dj_admin_plus/title.html' with title=title %}
+    {% include 'dj_admin_plus/title.html' with title=title %}
 
-<a href="{% url 'add_model_view' app_label model_name %}"
-   class="mb-8 inline-block bg-blue-500 hover:bg-blue-600 text-white text-sm rounded-full px-4 py-2">
-    <i class="fas fa-plus mr-2"></i>
-    Add New
-</a>
+    <a href="{% url 'add_model_view' app_label model_name %}"
+       class="mb-8 inline-block bg-blue-500 hover:bg-blue-600 text-white text-sm rounded-full px-4 py-2">
+        <i class="fas fa-plus mr-2"></i>
+        Add New
+    </a>
 
-<div class="p-4 bg-white rounded-2xl max-w-[100%] text-sm overflow-auto">
-    <div class="min-w-[800px]">
-        <div class="grid justify-start items-center py-2 gap-x-4 border-b border-[#333] text-gray-800"
-             style="grid-template-columns: 30px repeat({{ list_display|length }}, 1fr)">
+    <div class="p-4 bg-white rounded-2xl max-w-[100%] text-sm overflow-auto">
+        <div class="min-w-[800px]">
+            <div class="grid justify-start items-center py-2 gap-x-4 border-b border-[#333] text-gray-800"
+                 style="grid-template-columns: 30px repeat({{ list_display|length }}, 1fr)">
 
-            <input aria-label="check" name="select_all" type="checkbox" class="transform scale-125">
+                <input aria-label="check" name="select_all" type="checkbox" class="transform scale-125">
 
-            {% for title in list_display %}
-                {% if title == '__str__' %}
-                <span class="font-medium">{{ default_field_name }}</span>
-                {% else %}
-                <span class="font-medium">{{ title }}</span>
-                {% endif %}
-            {% endfor %}
-        </div>
-
-        <div class="mt-4 grid justify-start items-center gap-x-4 gap-y-4"
-             style="grid-template-columns: 30px repeat({{ list_display|length }}, 1fr)">
-
-            {% for pk, item in items %}
-            <input aria-label="select" type="checkbox" class="item-select transform scale-125">
-
-                {% for field_value in item %}
-                    {% if forloop.counter0 == 0 %}
-                    <div>
-                        <a href="{% url 'change_model_view' app_label model_name pk %}"
-                           class="text-indigo-500 font-medium">
-                            {% if field_value|length == 0 %}
-                            -
-                            {% else %}
-                            {{ field_value }}
-                            {% endif %}
-                        </a>
-                    </div>
+                {% for title in list_display %}
+                    {% if title == '__str__' %}
+                        <span class="font-medium">{{ default_field_name }}</span>
                     {% else %}
-                        {% if field_value|length == 0 %}
-                        <div>
-                            -
-                        </div>
-                        {% else %}
-                        <div>
-                            {{ field_value }}
-                        </div>
-                        {% endif %}
+                        <span class="font-medium">{{ title }}</span>
                     {% endif %}
                 {% endfor %}
-            {% endfor %}
+            </div>
+
+            <div class="mt-4 grid justify-start items-center gap-x-4 gap-y-4"
+                 style="grid-template-columns: 30px repeat({{ list_display|length }}, 1fr)">
+
+                {% for pk, item in items %}
+                    <input aria-label="select" type="checkbox" class="item-select transform scale-125">
+
+                    {% for field_value in item %}
+                        {% if forloop.counter0 == 0 %}
+                            <div>
+                                <a href="{% url 'change_model_view' app_label model_name pk %}"
+                                   class="text-indigo-500 font-medium">
+                                    {% if field_value|length == 0 %}
+                                        -
+                                    {% else %}
+                                        {{ field_value }}
+                                    {% endif %}
+                                </a>
+                            </div>
+                        {% else %}
+                            {% if field_value|length == 0 %}
+                                <div>
+                                    -
+                                </div>
+                            {% else %}
+                                <div>
+                                    {{ field_value }}
+                                </div>
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                {% endfor %}
+            </div>
         </div>
     </div>
-</div>
 
-<div class="flex justify-center gap-x-2 my-8 text-sm">
-    {% if total_pages > 1 %}
-        {% for number in page_numbers %}
-        <a href="?page={{ number }}"
-           class="rounded px-2 py {% if not number == page.number %}} bg-blue-500 text-white {% endif %}">{{ number }}</a>
-        {% endfor %}
-    {% endif %}
+    <div class="flex justify-center gap-x-2 my-8 text-sm">
+        {% if total_pages > 1 %}
+            {% for number in page_numbers %}
+                {% if number == page.paginator.ELLIPSIS %}
+                <span class="rounded px-2 py">{{ number }}</span>
+                {% else %}
+                <a href="?page={{ number }}"
+                   class=" rounded px-2 py {% if not number == page.number %}} bg-blue-500 text-white {% endif %}">
+                    {{ number }}</a>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
 
-    <span class="text-neutral-700">{{ total_objects }} {{ title|lower }}</span>
-</div>
+        <span class="text-neutral-700">{{ total_objects }} {{ title|lower }}</span>
+    </div>
 {% endblock %}

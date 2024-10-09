@@ -308,7 +308,7 @@ class ModelView(BaseModelView):
         items = model_class.objects.order_by(*ordering).all()
         paginator = Paginator(items, admin_class.list_per_page)
 
-        page_number = int(request.GET.get('page', 1))
+        page_number = request.GET.get('page', 1)
         page = paginator.get_page(page_number)
         page_numbers = paginator.get_elided_page_range(page_number)
 
