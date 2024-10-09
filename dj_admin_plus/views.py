@@ -303,7 +303,7 @@ class ModelView(BaseModelView):
         list_display = admin_class.list_display
 
         # Data ordering based on admin class.
-        ordering = admin_class.ordering if admin_class.ordering else '-pk'
+        ordering = admin_class.ordering if admin_class.ordering else ('-pk',)
         print(ordering)
 
         items = model_class.objects.order_by(*ordering).all()
