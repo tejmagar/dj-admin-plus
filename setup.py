@@ -5,7 +5,7 @@ with open("README.md", "r") as file:
 
 setup(
     name="dj-admin-plus",
-    version="0.0.1",
+    version="0.0.2",
     description="DJ Admin plus is a pluggable easy to use modern admin for Django framework.",
     long_description=long_description,
     long_description_content_type="text/markdown",

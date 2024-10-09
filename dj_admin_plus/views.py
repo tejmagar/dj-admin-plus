@@ -301,7 +301,12 @@ class ModelView(BaseModelView):
         model_admin = self.get_model_admin(model_class)
         admin_class = model_admin.__class__
         list_display = admin_class.list_display
-        items = model_class.objects.order_by('-pk').all()
+
+        # Data ordering based on admin class.
+        ordering = admin_class.ordering if admin_class.ordering else '-pk'
+        print(ordering)
+
+        items = model_class.objects.order_by(*ordering).all()
         paginator = Paginator(items, admin_class.list_per_page)
 
         page_number = int(request.GET.get('page', 1))
