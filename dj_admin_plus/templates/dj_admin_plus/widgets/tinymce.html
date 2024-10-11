@@ -1,8 +1,7 @@
 {% load static %}
-<textarea name="{{ widget.name }}" {% include "django/forms/widgets/attrs.html" %}>
-    {% if widget.value %}
-        {{ widget.value }}
-    {% endif %}
+<textarea aria-label="{{ widget.name }}"
+          name="{{ widget.name }}"
+        {% include "django/forms/widgets/attrs.html" %}>{% if widget.value %}{{ widget.value }}{% endif %}
 </textarea>
 
 <script>
