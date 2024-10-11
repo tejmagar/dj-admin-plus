@@ -16,13 +16,7 @@ Add DJ Admin plus in your installed apps.
 
 ```python
 INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-
+    ...
     'dj_admin_plus',  # Add DJ Admin plus
 ]
 ```
