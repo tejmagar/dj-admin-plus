@@ -1,5 +1,6 @@
 import enum
 from abc import ABC
+from re import search
 from typing import Type, Tuple, Any
 
 from django.apps import apps
@@ -8,7 +9,7 @@ from django.contrib.admin import ModelAdmin
 from django.contrib.auth import get_user_model, authenticate, login, logout
 from django.contrib.auth.forms import SetPasswordForm
 from django.core.paginator import Paginator
-from django.db.models import Model, Field
+from django.db.models import Model, Field, Q
 from django.db.models.query_utils import DeferredAttribute
 from django.http import Http404, HttpResponseForbidden, HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
@@ -292,8 +293,18 @@ class ModelView(BaseModelView):
 
         return verbose_label_list
 
-    # noinspection PyProtectedMember
+    @staticmethod
+    def filter_query_from_fields(search_fields, search_query):
+        filter_query = Q()
+        for field in search_fields:
+            query_field = f'{field}__icontains'
+            filter_query |= Q(**{query_field: search_query})
+
+        return filter_query
+
     def get(self, request, **kwargs):
+        search_query = request.GET.get('search')
+
         app_label, model_name = self.get_app_label_and_model_name(**kwargs)
         self.validate_permission_or_raise_404(request, app_label, model_name, Permission.VIEW)
 
@@ -305,7 +316,12 @@ class ModelView(BaseModelView):
         # Data ordering based on admin class.
         ordering = admin_class.ordering if admin_class.ordering else ('-pk',)
 
-        items = model_class.objects.order_by(*ordering).all()
+        items = model_class.objects
+        if search_query:
+            filter_query = ModelView.filter_query_from_fields(admin_class.search_fields, search_query)
+            items = items.filter(filter_query)
+
+        items = items.order_by(*ordering).all()
         paginator = Paginator(items, admin_class.list_per_page)
 
         page_number = request.GET.get('page', 1)
@@ -313,6 +329,7 @@ class ModelView(BaseModelView):
         page_numbers = paginator.get_elided_page_range(page_number)
 
         model_admin = admin_class(model_class, admin.site)
+        has_search_fields = model_admin.search_fields is not None
 
         constructed_items = self.construct_items(model_admin, page.object_list, list_display)
         list_display_verbose = self.verbose_list_display(list_display, model_class)
@@ -329,7 +346,8 @@ class ModelView(BaseModelView):
             'page': page,
             'page_numbers': page_numbers,
             'total_objects': total_objects,
-            'total_pages': paginator.num_pages
+            'total_pages': paginator.num_pages,
+            'has_search_fields': has_search_fields,
         })
 
 
@@ -373,6 +391,7 @@ class EditModelView(BaseModelView):
         operation = 'Add' if self.add_mode else 'Change'
         fieldsets = self.get_current_fieldsets(model_admin, self.add_mode)
         show_full_view = self.should_full_view_mode(fieldsets)
+
         return render(request, 'dj_admin_plus/edit-item.html', {
             'app_label': app_label,
             'model_name': model_name,

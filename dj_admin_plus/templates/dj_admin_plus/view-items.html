@@ -3,11 +3,24 @@
 {% block content %}
     {% include 'dj_admin_plus/title.html' with title=title %}
 
-    <a href="{% url 'add_model_view' app_label model_name %}"
-       class="mb-8 inline-block bg-blue-500 hover:bg-blue-600 text-white text-sm rounded-full px-4 py-2">
-        <i class="fas fa-plus mr-2"></i>
-        Add New
-    </a>
+    <div class="flex justify-between items-center mb-8">
+        <a href="{% url 'add_model_view' app_label model_name %}"
+           class="inline-block bg-blue-500 hover:bg-blue-600 text-white text-sm rounded-full px-4 py-2">
+            <i class="fas fa-plus mr-2"></i>
+            Add New
+        </a>
+
+        {% if has_search_fields %}
+            <form action="" method="get">
+                <input aria-label="Search"
+                       class="p-2 rounded-lg border-2 border-blue-400 text-sm"
+                       type="text"
+                       name="search"
+                       placeholder="Search here..."
+                       value="{% if request.GET.search %}{{ request.GET.search }}{% endif %}">
+            </form>
+        {% endif %}
+    </div>
 
     <div class="p-4 bg-white rounded-2xl max-w-[100%] text-sm overflow-auto">
         <div class="min-w-[800px]">
@@ -64,11 +77,11 @@
         {% if total_pages > 1 %}
             {% for number in page_numbers %}
                 {% if number == page.paginator.ELLIPSIS %}
-                <span class="rounded px-2 py">{{ number }}</span>
+                    <span class="rounded px-2 py">{{ number }}</span>
                 {% else %}
-                <a href="?page={{ number }}"
-                   class=" rounded px-2 py {% if not number == page.number %}} bg-blue-500 text-white {% endif %}">
-                    {{ number }}</a>
+                    <a href="?page={{ number }}"
+                       class=" rounded px-2 py {% if not number == page.number %}} bg-blue-500 text-white {% endif %}">
+                        {{ number }}</a>
                 {% endif %}
             {% endfor %}
         {% endif %}
