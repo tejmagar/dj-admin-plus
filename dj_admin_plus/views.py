@@ -319,7 +319,7 @@ class ModelView(BaseModelView):
         items = model_class.objects
         if search_query:
             filter_query = ModelView.filter_query_from_fields(admin_class.search_fields, search_query)
-            items = items.filter(filter_query)
+            items = items.filter(filter_query).distinct()
 
         items = items.order_by(*ordering).all()
         paginator = Paginator(items, admin_class.list_per_page)
